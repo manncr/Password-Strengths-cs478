@@ -1,0 +1,26 @@
+input {
+  border: 1px solid #ddd;
+  background-color: #eee;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  box-shadow: 5px 5px 10px #eee;
+  transition: border 0.1s, box-shadow 0.1s;
+}
+
+input.input-lg {
+  font-size: 1.5rem;
+  padding: 10px 20px;
+}
+
+input:focus {
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 10px #ddd;
+}
+
+label {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
