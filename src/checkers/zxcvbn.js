@@ -26,7 +26,7 @@ const determineStrength = password => {
   return { strength: (score + 1) * 2, description: formatFeedback(feedback) };
 };
 
-const name = "zxcvbn";
+const name = "Dropbox zxcvbn";
 
 const checker = { name, determineStrength };
 
