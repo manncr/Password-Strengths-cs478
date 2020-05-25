@@ -17,7 +17,7 @@ function getColor(strength) {
 
 function StrengthIndicator(props) {
   const { strength, description } = props.determineStrength(props.password);
-  if (strength < 0 || strength > 10) {
+  if (strength < 1 || strength > 10) {
     throw new Error("strength is out of bounds 0>=strength>=10");
   }
   const color = getColor(strength);
@@ -31,7 +31,7 @@ function StrengthIndicator(props) {
         <rect fill="#ddd" x="0" y="0" width="300" height="10" />
         <rect fill={color} y="0" width={strength * 30} height="10"></rect>
       </svg>
-      <p>{description}</p>
+      <div className="description">{description}</div>
     </div>
   );
 }

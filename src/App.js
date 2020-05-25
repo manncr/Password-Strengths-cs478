@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 
 import "./App.css";
 import { PasswordInput } from "./PasswordInput";
-import { PasswordIndicatorGrid } from "./PasswordIndicatorGrid";
+import PasswordIndicatorGridPlaceholder from "./PasswordIndicatorGridPlaceholder";
+const PasswordIndicatorGrid = lazy(() => import("./PasswordIndicatorGrid"));
 
 function App() {
   const [password, updatePassword] = useState("");
@@ -13,7 +14,9 @@ function App() {
       </header>
       <main>
         <PasswordInput password={password} updatePassword={updatePassword} />
-        <PasswordIndicatorGrid password={password} />
+        <Suspense fallback={<PasswordIndicatorGridPlaceholder />}>
+          <PasswordIndicatorGrid password={password} />
+        </Suspense>
       </main>
     </div>
   );
