@@ -10,7 +10,7 @@ function PasswordIndicatorGrid(props) {
       name: "Basic Indicator",
       determineStrength: password => {
         password = password || "";
-        const strength = Math.min(password.length + 1, 10);
+        const strength = Math.min(password.length, 10);
         let descriptionText = "weak";
         if (strength > 4 && strength < 7) {
           descriptionText = "okay";

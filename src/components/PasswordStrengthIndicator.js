@@ -17,7 +17,7 @@ function getColor(strength) {
 
 function StrengthIndicator(props) {
   const { strength, description } = props.determineStrength(props.password);
-  if (strength < 1 || strength > 10) {
+  if (strength < 0 || strength > 10) {
     throw new Error("strength is out of bounds 0>=strength>=10");
   }
   const color = getColor(strength);
