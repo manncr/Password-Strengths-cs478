@@ -8,12 +8,15 @@ const formatFeedback = feedback => {
   return (
     <>
       <p>{feedback.warning}</p>
-      {feedback.suggestions && (
-        <ol>
-          {feedback.suggestions.map(suggestion => (
-            <li key={suggestion}>{suggestion}</li>
-          ))}
-        </ol>
+      {feedback.suggestions.length > 0 && (
+        <>
+          <h4>Suggestions:</h4>
+          <ul>
+            {feedback.suggestions.map(suggestion => (
+              <li key={suggestion}>{suggestion}</li>
+            ))}
+          </ul>
+        </>
       )}
     </>
   );
