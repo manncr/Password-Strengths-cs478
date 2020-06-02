@@ -18,7 +18,8 @@ code {
     monospace;
 }
 
-p {
+p,
+li {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }

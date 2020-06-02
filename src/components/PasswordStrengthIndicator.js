@@ -31,7 +31,7 @@ function StrengthIndicator(props) {
         <rect fill="#ddd" x="0" y="0" width="300" height="10" />
         <rect fill={color} y="0" width={strength * 30} height="10"></rect>
       </svg>
-      <p>{description}</p>
+      <div className="description">{description}</div>
     </div>
   );
 }

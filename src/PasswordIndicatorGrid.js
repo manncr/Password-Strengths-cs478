@@ -2,6 +2,7 @@ import React from "react";
 
 import "./PasswordIndicatorGrid.css";
 import { StrengthIndicator } from "./components/PasswordStrengthIndicator";
+import zxcvbn from "./checkers/zxcvbn";
 
 function PasswordIndicatorGrid(props) {
   let indicators = [
@@ -10,19 +11,20 @@ function PasswordIndicatorGrid(props) {
       determineStrength: password => {
         password = password || "";
         const strength = Math.min(password.length, 10);
-        let description = "weak";
+        let descriptionText = "weak";
         if (strength > 4 && strength < 7) {
-          description = "okay";
+          descriptionText = "okay";
         } else if (strength >= 7) {
-          description = "strong";
+          descriptionText = "strong";
         }
+
+        const description = <p>{descriptionText}</p>;
 
         return { strength, description };
       }
-    }
+    },
+    zxcvbn
   ];
-
-  indicators = [...indicators, ...indicators, ...indicators, ...indicators];
 
   return (
     <div className="password-grid">
@@ -37,4 +39,4 @@ function PasswordIndicatorGrid(props) {
   );
 }
 
-export { PasswordIndicatorGrid };
+export default PasswordIndicatorGrid;
