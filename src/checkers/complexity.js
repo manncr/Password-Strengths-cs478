@@ -1,4 +1,5 @@
 import React from "react";
+import text from "../text.json"
 
 const formatFeedback = feedback => {
 //	if (!feedback.warning && !feedback.suggestions) {
@@ -9,7 +10,7 @@ const formatFeedback = feedback => {
 			<>
 				<h4>Suggestions:</h4>
 				<ul>
-					<p>{feedback.suggestion}</p>
+					<p>{feedback}</p>
 				</ul>
 			</>
 		</>
@@ -28,24 +29,36 @@ const determineStrength = password => {
 	// p = 0.5 if special character is at the beginning or the end of w and w has no more 
 	// 			than 2 charsets. 0 otherwise
 	// d is the length of the substring that is a dictionary word
-	var special = "*|,\":<>[]{}`\';()@&$#%";
+	var special = "*|,\":<>[]{}`';()@&$#%";
 	var l = password.length;
 	if (l < 4) {
-		var feedback.suggestion = "Password needs to be longer than 4 characters";
+		var feedback = "Password needs to be longer than 4 characters";
 		return {strength: 0, description: formatFeedback(feedback)}
 	}
-	var n = 1; // this is because we have the default charset = utf-8 we are gonna assume thats 1
-	var k = 1; // all of the substrings are in the same charset
-	var s = 0;
-	var p = 0
+	var n = 1.0; // this is because we have the default charset = utf-8 we are gonna assume thats 1
+	var k = 1.0; // all of the substrings are in the same charset
+	var s = 0.0;
+	var p = 0.0
 	for (var i = 0; i < l; i++){
-		if (special.indexOf(password.charAt(i)) != -1) {
+		if (special.indexOf(password.charAt(i)) !== -1) {
 			s = 0.5
-			if (i == 0 || i == (l - 1)) {
+			if (i === 0 || i === (l - 1)) {
 				p = 0.5; 
 			}
 		}
 	}
+
+	var textl = (text.length/30);
+	var d = 0.0;
+	for(var j = 0; j < textl; j++){
+		console.log('checking');
+		if (password === text[j]) {
+			d = text[j].length;
+			console.log("found");
+		}
+	}
+
+	var c = n + (k/l) + s - p - (d/l);
 
 
 	//check if its in a dictionary. get the list of possible substrings.
@@ -53,9 +66,9 @@ const determineStrength = password => {
 	//	then do a binary search on the file. 
 
 
-	const score = 1;
-	const feedback =":)";
-	return {strength: (score + 1)*2, description: formatFeedback(feedback)}
+	const score = c;
+	var feedback = "Score: " + c.toString();
+	return {strength: score, description: formatFeedback(feedback)}
 };
 
 const name = "Complexity checker";
