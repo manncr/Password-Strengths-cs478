@@ -1,24 +1,21 @@
 import React from "react";
 
 const formatFeedback = feedback => {
-    if (true) {
-      return <p></p>;
-    }
-    return (
-      <>
-        <p>{feedback.warning}</p>
-        {feedback.suggestions.length > 0 && (
-          <>
+      return (
+        <>
+        <p>{feedback.simple}</p>
+          {feedback.suggestions.length > 0 && (
+            <>
             <h4>Suggestions:</h4>
-            <ul>
-              {feedback.suggestions.map(suggestion => (
-                <li key={suggestion}>{suggestion}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </>
-    );
+              <ul>
+                {feedback.suggestions.map(suggestion => (
+                  <li key={suggestion}>{suggestion}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
+      );
   };
 
 const determineStrength = (password) =>{
@@ -31,6 +28,7 @@ const determineStrength = (password) =>{
     var number = false;
     //Bonus bits-------------------
 
+    /*
     //Length bonuses
     if(length >= 1){    //First character. +4
         score += 4.0;
@@ -49,18 +47,17 @@ const determineStrength = (password) =>{
             }
         }
     }
-
+*/
     //Contains uppercase or non-alphabetic characters. +3 for each
     //Other conditionals are for getting the charset size
 
     while(i < length){
         var char = password[i];
         if(isNaN(char * 1)){   //turns from char to int, checks if not a number
-            console.log("--Regex check: ", char.match(/[A-Z]/i), " char= ", char);
-            if(char.match(/[A-Z]/i)){    //regex to check if uppercase alpha
+            if(char.match(/[A-Z]/g)){    //check if uppercase
                 uppercase = true;
             }
-            else if(char.match(/[a-z]/i)){   //check if lowercase alpha
+            else if(char.match(/[a-z]/g)){   //check if lowercase
                 lowercase = true;
             }
             else{ //Else it's not alphanumeric
@@ -87,9 +84,13 @@ const determineStrength = (password) =>{
     if(number){charsetSize += 10;}
 
     //entropy formula according to NIST Eletronic Authentication Guidelines
-    entropy = Math.log2(charsetSize) * length;
-
-    console.log("Entropy: " + entropy + "  Bonus bits: " + score);
+    if(charsetSize > 0){
+        entropy = Math.log2(charsetSize) * length;
+    } else{ entropy = 0;}
+    console.log("middle score:", score);
+    console.log("Entropy: " + entropy + 
+    "  Bonus bits: " + score, 
+     "Length: " + length);
     score += entropy;
 
     var feedback = {
@@ -98,84 +99,88 @@ const determineStrength = (password) =>{
         lowercase: lowercase,
         special: special,
         number: number,
-        entropy: entropy
     };
 
-    return { strength: (score % 10 + 1), description: formatFeedback(generateFeedback(feedback)) }
+    var result = generateFeedback(feedback);
+    return { strength: result.strength, description: result.description};
     
 };
 
+
+
 const generateFeedback = (result) => {
-    var feedback = {};
     var score = 0;
-    var description = "";
-    console.log("==Feedback score at top: ", score);
+    var description = [];
+    var feedback = {};
 
-    //Descriptive result
-    if(!result.uppercase)
-    if(!result.lowercase)
-    if(!result.special)
-    if(!result.number)
+    console.log("==Feedback score at top: ", score, "Results score:", result.score);
+    
+    //Charset suggestions
+    if(!result.uppercase){ description.push("Use uppercase letters");}
+    if(!result.lowercase){description.push("Use lowercase letters");}
+    if(!result.special){description.push("Use special symbols");}
+    if(!result.number){description.push("Use numbers");}
 
-        //<14 = 1
-        //<28 = very weak = 2-3
-        //28-35 weak = 4-5
-        //36-59 reasonable  = 6-7
-        //60-127 strong = 8-9
-        //128+ very strong = 10
+    //<14 = 1
+    //<28 = very weak = 2-3
+    //28-35 weak = 4-5
+    //36-59 reasonable  = 6-7
+    //60-127 strong = 8-9
+    //128+ very strong = 10
 
-    //Strength and result based on entropy
-    if(result.score <= 14){
+    //Simple overview by score
+    if(result.score <= 14.0){
         score = 1;
-        description = "Use more than 4 characters.";
+        feedback.simple ="Very weak";
     }
-    else if(result.score >= 15 && result.score <= 28){
+    else if(result.score >= 14.1 && result.score <= 28.0){
         if(result.score < 22){
             score = 2;
-            description = "";
+            feedback.simple ="Very weak";
         }
         else{
             score = 3;
-            description = "";
+            feedback.simple ="Very weak";
         }
     }
-    else if(result.score >= 29 && result.score <= 35){
-        if(result.score >= 32){
+    else if(result.score >= 28.1 && result.score <= 35.0){
+        if(result.score <= 32){
             score = 4;
-            description = "";
+            feedback.simple ="Weak";
         }
         else{
             score = 5;
-            description = "";
+            feedback.simple ="Weak";
         }
     }
-    else if(result.score >= 36 && result.score <= 59){
+    else if(result.score >= 35.1 && result.score <= 59.0){
         if(result.score < 53){
             score = 6;
-            description = "";
+            feedback.simple ="Reasonable";
         }
         else{
             score = 7
-            description = "";
+            feedback.simple ="Reasonable";
         }
     }
-    else if(result.score >= 60 && result.score <= 127){
+    else if(result.score >= 59.1 && result.score <= 127.0){
         if(result.score < 94){
             score = 8;
-            description = "";
+            feedback.simple ="Strong";
         }
         else{
             score = 9;
-            description = "";
+            feedback.simple ="Strong";
         }
     }
     else {
         score = 10;
-        description = "";
+        feedback.simple ="Very Strong";
     }
 
-
-    
+    //Turn into object to get feedback in html
+    feedback.suggestions = description;
+    return {strength: score, description: formatFeedback(feedback)};
 }
 
 const name = "NIST Electronic Authentication Guidelines: Entropy"
