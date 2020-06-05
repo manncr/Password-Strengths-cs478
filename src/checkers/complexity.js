@@ -1,5 +1,5 @@
 import React from "react";
-import text from "../text.json"
+import text from "../words_alpha.json"
 
 const formatFeedback = feedback => {
 //	if (!feedback.warning && !feedback.suggestions) {
@@ -51,8 +51,7 @@ const determineStrength = password => {
 	for (var e = 0; e < l; e++){
 		if (num.indexOf(password.charAt(e)) !== -1){
 			numstr += password.charAt(e);
-			console.log(numstr);
-			if (num.indexOf(password.charAt(e + 1)) === -1){
+			if ((num.indexOf(password.charAt(e + 1)) === -1) || (e+1 == l)){
 				numsub.push(numstr);
 				numstr = "";
 			}
@@ -63,7 +62,7 @@ const determineStrength = password => {
 		}
 		if (word.indexOf(password.charAt(e)) !== -1){
 			wordstr += password.charAt(e)
-			if (word.indexOf(password.charAt(e + 1)) === -1){
+			if ((word.indexOf(password.charAt(e + 1)) === -1) || (e+1 == l)){
 				wordsub.push(wordstr);
 				wordstr = "";
 			}
@@ -74,7 +73,7 @@ const determineStrength = password => {
 		}
 		if (special.indexOf(password.charAt(e)) !== -1){
 			specialstr += password.charAt(e);
-			if (special.indexOf(password.charAt(e + 1)) === -1){
+			if ((special.indexOf(password.charAt(e + 1)) === -1) || (e+1 == l)){
 				specialsub.push(specialstr);
 				specialstr = "";
 			}
@@ -95,18 +94,33 @@ const determineStrength = password => {
 	console.log(k);
 	console.log(n);
 
-	var textl = (text.length/30);
+	var textl = (text.length);
+	console.log(textl);
 	var d = 0.0;
-	for (var b = 0; b < wordsub.length; b++){
-		for(var j = 0; j < textl; j++){
-			console.log('checking');
-			if (wordsub[b] === text[j]) {
-				d = text[j].length;
-				console.log("found");
+	var left = 0;
+	var right = textl - 1;
+	var index;
+	for(var i = 0; i < wordsub.length; i++){
+		while (left <= right){
+			index = Math.floor((left + right)/2);
+			console.log("Left " + left);
+			console.log("right" + right);
+			console.log("Comparing: " + wordsub[i] + " with " + text[index]);
+			console.log(wordsub[i].length)
+			if (wordsub[i] == text[index].trim()){
+				d = wordsub[i].length;
 			}
+			if (password < text[index]){
+				right = index - 1;
+			}
+			else {
+				left = index + 1;
+			}
+		
 		}
 	}
 
+	console.log("d value is " + d)
 	var c = n + (k/l) + s - p - (d/l);
 
 
