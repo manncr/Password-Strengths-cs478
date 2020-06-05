@@ -112,7 +112,7 @@ const generateFeedback = (result) => {
     if(!result.special){description.push("Use special symbols");}
     if(!result.number){description.push("Use numbers");}
 
-    //Scoring sorta from this website: https://www.pleacher.com/mp/mlessons/algebra/entropy.html
+    //Scoring from this website: https://www.pleacher.com/mp/mlessons/algebra/entropy.html
     //<14 = 1
     //<28 = very weak = 2-3
     //28-35 weak = 4-5
