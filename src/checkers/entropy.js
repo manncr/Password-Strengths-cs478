@@ -20,37 +20,37 @@ const formatFeedback = feedback => {
 
 const determineStrength = (password) =>{
     const length = password.length;
-    var score = 0;
+    var bonus = 0;
     var i = 0;
     var uppercase = false;
     var lowercase = false;
     var special = false;
     var number = false;
+    var charsetSize = 0;
+    var entropy = 0;
     //Bonus bits-------------------
-
     /*
     //Length bonuses
     if(length >= 1){    //First character. +4
-        score += 4.0;
+        bonus += 4.0;
         if(length >= 2){  //2nd-8th characters. +2
             if(length > 8){
-                score += 7 * 2;
+                bonus += 7 * 2;
                 if(length > 20){    //9th-20th characters. +1.5
-                    score += 1.5 * 12
+                    bonus += 1.5 * 12
                 }
                 else{
-                    score += (length - 8) * 1.5;
+                    bonus += (length - 8) * 1.5;
                 }
             }
             else{
-                score += (length-1) * 2.0;
+                bonus += (length-1) * 2.0;
             }
         }
     }
 */
-    //Contains uppercase or non-alphabetic characters. +3 for each
+    //Contains uppercase or non-alphabetic characters. bonus +3 for both
     //Other conditionals are for getting the charset size
-
     while(i < length){
         var char = password[i];
         if(isNaN(char * 1)){   //turns from char to int, checks if not a number
@@ -73,10 +73,6 @@ const determineStrength = (password) =>{
     //Dictionary check. +3 if substring matches, +6 if no match
     //TODO: ^^
 
-    //Entropy--------
-    var charsetSize = 0;
-    var entropy = 0;
-
     //get charset size
     if(uppercase){charsetSize += 26;}
     if(lowercase){charsetSize += 26;}
@@ -86,24 +82,21 @@ const determineStrength = (password) =>{
     //entropy formula according to NIST Eletronic Authentication Guidelines
     if(charsetSize > 0){
         entropy = Math.log2(charsetSize) * length;
-    } else{ entropy = 0;}
-    console.log("middle score:", score);
-    console.log("Entropy: " + entropy + 
-    "  Bonus bits: " + score, 
-     "Length: " + length);
-    score += entropy;
+    } else{ 
+        entropy = 0;
+    }
+
+    console.log("Entropy: " + entropy + "Bonus bits: " + bonus);
 
     var feedback = {
-        score: score,
+        score: entropy,
         uppercase: uppercase,
         lowercase: lowercase,
         special: special,
         number: number,
     };
 
-    var result = generateFeedback(feedback);
-    return { strength: result.strength, description: result.description};
-    
+    return generateFeedback(feedback);
 };
 
 
@@ -112,8 +105,6 @@ const generateFeedback = (result) => {
     var score = 0;
     var description = [];
     var feedback = {};
-
-    console.log("==Feedback score at top: ", score, "Results score:", result.score);
     
     //Charset suggestions
     if(!result.uppercase){ description.push("Use uppercase letters");}
@@ -121,6 +112,7 @@ const generateFeedback = (result) => {
     if(!result.special){description.push("Use special symbols");}
     if(!result.number){description.push("Use numbers");}
 
+    //Scoring sorta from this website: https://www.pleacher.com/mp/mlessons/algebra/entropy.html
     //<14 = 1
     //<28 = very weak = 2-3
     //28-35 weak = 4-5
@@ -129,12 +121,12 @@ const generateFeedback = (result) => {
     //128+ very strong = 10
 
     //Simple overview by score
-    if(result.score <= 14.0){
+    if(result.score <= 20.0){
         score = 1;
         feedback.simple ="Very weak";
     }
-    else if(result.score >= 14.1 && result.score <= 28.0){
-        if(result.score < 22){
+    else if(result.score >= 20.1 && result.score <= 34){
+        if(result.score < 28){
             score = 2;
             feedback.simple ="Very weak";
         }
@@ -143,8 +135,8 @@ const generateFeedback = (result) => {
             feedback.simple ="Very weak";
         }
     }
-    else if(result.score >= 28.1 && result.score <= 35.0){
-        if(result.score <= 32){
+    else if(result.score >=  34.1&& result.score <= 50){
+        if(result.score <= 44){
             score = 4;
             feedback.simple ="Weak";
         }
@@ -153,8 +145,8 @@ const generateFeedback = (result) => {
             feedback.simple ="Weak";
         }
     }
-    else if(result.score >= 35.1 && result.score <= 59.0){
-        if(result.score < 53){
+    else if(result.score >= 50.1 && result.score <= 70){
+        if(result.score < 61){
             score = 6;
             feedback.simple ="Reasonable";
         }
@@ -163,8 +155,8 @@ const generateFeedback = (result) => {
             feedback.simple ="Reasonable";
         }
     }
-    else if(result.score >= 59.1 && result.score <= 127.0){
-        if(result.score < 94){
+    else if(result.score >= 70.1 && result.score <= 100){
+        if(result.score < 86){
             score = 8;
             feedback.simple ="Strong";
         }
@@ -185,5 +177,4 @@ const generateFeedback = (result) => {
 
 const name = "NIST Electronic Authentication Guidelines: Entropy"
 const checker = {name, determineStrength};
-
 export default checker;
