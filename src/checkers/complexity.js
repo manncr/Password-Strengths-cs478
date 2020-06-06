@@ -49,9 +49,9 @@ const determineStrength = password => {
 	var p = 0.0;
 	var specialc,numc,wordc = 0;
 	for (var e = 0; e < l; e++){
-		if (num.indexOf(password.charAt(e)) !== -1){
+		if (num.includes(password.charAt(e))){
 			numstr += password.charAt(e);
-			if ((num.indexOf(password.charAt(e + 1)) === -1) || (e+1 == l)){
+			if ((num.includes(password.charAt(e + 1)) === false) || (e+1 == l)){
 				numsub.push(numstr);
 				numstr = "";
 			}
@@ -60,9 +60,9 @@ const determineStrength = password => {
 				numc = 1;
 			}
 		}
-		if (word.indexOf(password.charAt(e)) !== -1){
+		if (word.includes(password.charAt(e))){
 			wordstr += password.charAt(e)
-			if ((word.indexOf(password.charAt(e + 1)) === -1) || (e+1 == l)){
+			if ((word.includes(password.charAt(e + 1)) === false) || (e+1 == l)){
 				wordsub.push(wordstr);
 				wordstr = "";
 			}
@@ -71,9 +71,9 @@ const determineStrength = password => {
 				wordc = 1;
 			}
 		}
-		if (special.indexOf(password.charAt(e)) !== -1){
+		if (special.includes(password.charAt(e))){
 			specialstr += password.charAt(e);
-			if ((special.indexOf(password.charAt(e + 1)) === -1) || (e+1 == l)){
+			if ((special.includes(password.charAt(e + 1)) === false) || (e+1 == l)){
 				specialsub.push(specialstr);
 				specialstr = "";
 			}
@@ -86,7 +86,10 @@ const determineStrength = password => {
 			}
 		}
 	}
-
+	var check = specialc + numc + wordc;
+	if (check >= 2){
+		p = 0;
+	}
 	k = numsub.length + wordsub.length + specialsub.length; 
 	console.log(numsub)
 	console.log(wordsub)
@@ -100,17 +103,22 @@ const determineStrength = password => {
 	var left = 0;
 	var right = textl - 1;
 	var index;
-	for(var i = 0; i < wordsub.length; i++){
+	for(var q = 0; q < wordsub.length; q++){
+		console.log(wordsub[q])
+		left = 0;
+		right = textl - 1;
+		index = 0;
 		while (left <= right){
 			index = Math.floor((left + right)/2);
 			console.log("Left " + left);
 			console.log("right" + right);
-			console.log("Comparing: " + wordsub[i] + " with " + text[index]);
-			console.log(wordsub[i].length)
-			if (wordsub[i] == text[index].trim()){
-				d = wordsub[i].length;
+			console.log("Comparing: " + wordsub[q] + " with " + text[index]);
+			console.log(wordsub[q].length)
+			if (wordsub[q] == text[index].trim()){
+				d = wordsub[q].length;
+				console.log("found");
 			}
-			if (password < text[index]){
+			if (wordsub[q] < text[index].trim()){
 				right = index - 1;
 			}
 			else {
