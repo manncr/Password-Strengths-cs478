@@ -102,7 +102,7 @@ const determineStrength = (password) =>{
 
 
 const generateFeedback = (result) => {
-    var score = 0;
+    var score = 1;
     var description = [];
     var feedback = {};
     
@@ -113,7 +113,6 @@ const generateFeedback = (result) => {
     if(!result.number){description.push("Use numbers");}
 
     //Scoring from this website: https://www.pleacher.com/mp/mlessons/algebra/entropy.html
-    //<14 = 1
     //<28 = very weak = 2-3
     //28-35 weak = 4-5
     //36-59 reasonable  = 6-7
@@ -121,53 +120,47 @@ const generateFeedback = (result) => {
     //128+ very strong = 10
 
     //Simple overview by score
-    if(result.score <= 20.0){
-        score = 1;
-        feedback.simple ="Very weak";
-    }
-    else if(result.score >= 20.1 && result.score <= 34){
-        if(result.score < 28){
+    if(result.score <= 28){
             score = 2;
-            feedback.simple ="Very weak";
-        }
-        else{
+            feedback.simple ="Very weak; might keep out family members";
+    }
+    else if(result.score >= 28.1 && result.score <= 35){
+        if(result.score <= 31.5){
             score = 3;
-            feedback.simple ="Very weak";
+            feedback.simple ="Weak; should keep out most people, often good for desktop login passwords";
         }
-    }
-    else if(result.score >=  34.1&& result.score <= 50){
-        if(result.score <= 44){
+        else{
             score = 4;
-            feedback.simple ="Weak";
+            feedback.simple ="Weak; should keep out most people, often good for desktop login passwords";
         }
-        else{
+    }
+    else if(result.score >= 35.1 && result.score <= 59){
+        if(result.score < 47){
             score = 5;
-            feedback.simple ="Weak";
-        }
-    }
-    else if(result.score >= 50.1 && result.score <= 70){
-        if(result.score < 61){
-            score = 6;
-            feedback.simple ="Reasonable";
+            feedback.simple ="Reasonable; fairly secure passwords for network and company passwords";
         }
         else{
-            score = 7
-            feedback.simple ="Reasonable";
+            score = 6
+            feedback.simple ="Reasonable; fairly secure passwords for network and company passwords";
         }
     }
-    else if(result.score >= 70.1 && result.score <= 100){
-        if(result.score < 86){
+    else if(result.score >= 59.1 && result.score <= 128){
+        if(result.score < 83){
+            score = 7;
+            feedback.simple ="Strong; can be good for guarding financial information";
+        }
+        else if(result.score < 106){
             score = 8;
-            feedback.simple ="Strong";
+            feedback.simple ="Strong; can be good for guarding financial information";
         }
         else{
             score = 9;
-            feedback.simple ="Strong";
+            feedback.simple ="Strong; can be good for guarding financial information";
         }
     }
     else {
         score = 10;
-        feedback.simple ="Very Strong";
+        feedback.simple ="Very Strong; often overkill";
     }
 
     //Turn into object to get feedback in html
