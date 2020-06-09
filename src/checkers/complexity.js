@@ -2,9 +2,6 @@ import React from "react";
 import text from "../words_alpha.json"
 
 const formatFeedback = feedback => {
-//	if (!feedback.warning && !feedback.suggestions) {
-//		return <p></p>
-//	}
 	return (
 		<>
 			<>
@@ -33,8 +30,9 @@ const determineStrength = password => {
 	var num = "1234567890";
 	var word = "abcdefghijklmnopqrstuvwzyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	var l = password.length;
+	var feedback;
 	if (l < 4) {
-		var feedback = "Password needs to be longer than 4 characters";
+		feedback = "Password needs to be longer than 4 characters";
 		return {strength: 0, description: formatFeedback(feedback)}
 	}
 	var n = 0.0; // this is because we have the default charset = utf-8 we are gonna assume thats 1
@@ -91,14 +89,8 @@ const determineStrength = password => {
 		p = 0;
 	}
 	k = numsub.length + wordsub.length + specialsub.length; 
-	console.log(numsub)
-	console.log(wordsub)
-	console.log(specialsub)
-	console.log(k);
-	console.log(n);
 
 	var textl = (text.length);
-	console.log(textl);
 	var d = 0.0;
 	var left = 0;
 	var right = textl - 1;
@@ -110,13 +102,8 @@ const determineStrength = password => {
 		index = 0;
 		while (left <= right){
 			index = Math.floor((left + right)/2);
-			console.log("Left " + left);
-			console.log("right" + right);
-			console.log("Comparing: " + wordsub[q] + " with " + text[index]);
-			console.log(wordsub[q].length)
 			if (wordsub[q] == text[index].trim()){
 				d = wordsub[q].length;
-				console.log("found");
 			}
 			if (wordsub[q] < text[index].trim()){
 				right = index - 1;
@@ -132,13 +119,9 @@ const determineStrength = password => {
 	var c = n + (k/l) + s - p - (d/l);
 
 
-	//check if its in a dictionary. get the list of possible substrings.
-	//	[a-zA-Z]*
-	//	then do a binary search on the file. 
-
 
 	const score = c;
-	var feedback = "Score: " + c.toString();
+	feedback = "Score: " + c.toString();
 	return {strength: score, description: formatFeedback(feedback)}
 };
 
