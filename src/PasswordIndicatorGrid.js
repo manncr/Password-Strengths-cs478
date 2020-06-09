@@ -4,6 +4,7 @@ import "./PasswordIndicatorGrid.css";
 import { StrengthIndicator } from "./components/PasswordStrengthIndicator";
 import zxcvbn from "./checkers/zxcvbn";
 import entropy from "./checkers/entropy";
+import complexity from "./checkers/complexity"
 
 function PasswordIndicatorGrid(props) {
   let indicators = [
@@ -25,7 +26,8 @@ function PasswordIndicatorGrid(props) {
       }
     },
     zxcvbn,
-    entropy
+    entropy,
+	  complexity
   ];
 
   return (
