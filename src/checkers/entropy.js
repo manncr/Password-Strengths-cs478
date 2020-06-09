@@ -14,6 +14,7 @@ const formatFeedback = feedback => {
               </ul>
             </>
           )}
+          <h4>Entropy Score: {feedback.entropy}</h4>
         </>
       );
   };
@@ -28,27 +29,7 @@ const determineStrength = (password) =>{
     var number = false;
     var charsetSize = 0;
     var entropy = 0;
-    //Bonus bits-------------------
-    /*
-    //Length bonuses
-    if(length >= 1){    //First character. +4
-        bonus += 4.0;
-        if(length >= 2){  //2nd-8th characters. +2
-            if(length > 8){
-                bonus += 7 * 2;
-                if(length > 20){    //9th-20th characters. +1.5
-                    bonus += 1.5 * 12
-                }
-                else{
-                    bonus += (length - 8) * 1.5;
-                }
-            }
-            else{
-                bonus += (length-1) * 2.0;
-            }
-        }
-    }
-*/
+ 
     //Contains uppercase or non-alphabetic characters. bonus +3 for both
     //Other conditionals are for getting the charset size
     while(i < length){
@@ -69,9 +50,6 @@ const determineStrength = (password) =>{
         }
         i++;
     }
-
-    //Dictionary check. +3 if substring matches, +6 if no match
-    //TODO: ^^
 
     //get charset size
     if(uppercase){charsetSize += 26;}
@@ -104,7 +82,9 @@ const determineStrength = (password) =>{
 const generateFeedback = (result) => {
     var score = 1;
     var description = [];
-    var feedback = {};
+    var feedback = {
+        entropy: result.score
+    };
     
     //Charset suggestions
     if(!result.uppercase){ description.push("Use uppercase letters");}
