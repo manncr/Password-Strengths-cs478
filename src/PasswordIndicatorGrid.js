@@ -3,7 +3,7 @@ import React from "react";
 import "./PasswordIndicatorGrid.css";
 import { StrengthIndicator } from "./components/PasswordStrengthIndicator";
 import zxcvbn from "./checkers/zxcvbn";
-
+import complexity from "./checkers/complexity"
 function PasswordIndicatorGrid(props) {
   let indicators = [
     {
@@ -23,7 +23,8 @@ function PasswordIndicatorGrid(props) {
         return { strength, description };
       }
     },
-    zxcvbn
+    zxcvbn,
+	complexity
   ];
 
   return (
